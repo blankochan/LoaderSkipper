@@ -13,7 +13,7 @@ namespace LoaderSkipper
 	public class main : MelonMod
 	{
 		private GameObject status;
-		private string currentScene = "";
+		private string currentScene = "Loader";
 		private bool sceneChanged = false;
 		private bool init = false;
 		private string[] fileText;
@@ -25,15 +25,19 @@ namespace LoaderSkipper
 		private GameObject head, lController, rController, root;
 		private PlayerMeasurement playerMeasurement;
 		private bool measurementGot = false;
+		private bool loading = false;
 
 		public override void OnFixedUpdate()
 		{
 			if (sceneChanged)
 			{
 				try
-				{
-					status = GameObject.Find("________________SCENE_________________/Text/Measuring/TextCanvas/Status");
-					init = true;
+                {
+                    if (currentScene == "Loader")
+                    {
+                        status = GameObject.Find("________________SCENE_________________/Text/Measuring/TextCanvas/Status");
+                        init = true;
+                    }
 				}
 				catch
 				{
@@ -45,7 +49,7 @@ namespace LoaderSkipper
 					{
 						playerMeasurement = PlayerManager.instance.localPlayer.Data.PlayerMeasurement;
 						measurementGot = true;
-					}
+                    }
                     else
                     {
 						return;
@@ -63,10 +67,16 @@ namespace LoaderSkipper
 				StoreTPose();
 				playerMeasurement = PlayerManager.instance.localPlayer.Data.PlayerMeasurement;
 			}
-			if (init && (currentScene == "Loader") && (status.GetComponent<TextMeshProUGUI>().text == "Ready to RUMBLE!"))
+			if (init && !loading && (currentScene == "Loader") && (status.GetComponent<TextMeshProUGUI>().text == "Ready to RUMBLE!"))
 			{
+				loading = true;
 				MelonCoroutines.Start(StartGymLoad());
 			}
+		}
+
+		private void Log (string msg)
+		{
+			MelonLogger.Msg(msg);
 		}
 
 		public IEnumerator StartGymLoad()
@@ -113,25 +123,31 @@ namespace LoaderSkipper
 
 		public static void StoreTPose()
 		{
-			measurements[0] = PlayerManager.instance.localPlayer.Controller.gameObject.transform.GetChild(1).GetChild(0).GetChild(0);
-			measurements[1] = PlayerManager.instance.localPlayer.Controller.gameObject.transform.GetChild(1).GetChild(1).GetChild(0);
-			measurements[2] = PlayerManager.instance.localPlayer.Controller.gameObject.transform.GetChild(1).GetChild(2).GetChild(0);
-			measurements[3] = PlayerManager.instance.localPlayer.Controller.gameObject.transform.GetChild(1).GetChild(3);
-			string[] textToStore = new string[12];
-			textToStore[0] = measurements[0].position.x.ToString();
-			textToStore[1] = measurements[0].position.y.ToString();
-			textToStore[2] = measurements[0].position.z.ToString();
-			textToStore[3] = measurements[1].position.x.ToString();
-			textToStore[4] = measurements[1].position.y.ToString();
-			textToStore[5] = measurements[1].position.z.ToString();
-			textToStore[6] = measurements[2].position.x.ToString();
-			textToStore[7] = measurements[2].position.y.ToString();
-			textToStore[8] = measurements[2].position.z.ToString();
-			textToStore[9] = measurements[3].position.x.ToString();
-			textToStore[10] = (measurements[3].position.y - 0.06f).ToString();
-			textToStore[11] = measurements[3].position.z.ToString();
-			WriteToFile(textToStore, FILEPATHLastTPose);
-			MelonLogger.Msg("TPose Stored");
+			try
+            {
+                measurements[0] = PlayerManager.instance.localPlayer.Controller.gameObject.transform.GetChild(2).GetChild(0).GetChild(0);
+                measurements[1] = PlayerManager.instance.localPlayer.Controller.gameObject.transform.GetChild(2).GetChild(1).GetChild(0);
+                measurements[2] = PlayerManager.instance.localPlayer.Controller.gameObject.transform.GetChild(2).GetChild(2).GetChild(0);
+                measurements[3] = PlayerManager.instance.localPlayer.Controller.gameObject.transform.GetChild(2).GetChild(3);
+                string[] textToStore = new string[12];
+                textToStore[0] = measurements[0].position.x.ToString();
+                textToStore[1] = measurements[0].position.y.ToString();
+                textToStore[2] = measurements[0].position.z.ToString();
+                textToStore[3] = measurements[1].position.x.ToString();
+                textToStore[4] = measurements[1].position.y.ToString();
+                textToStore[5] = measurements[1].position.z.ToString();
+                textToStore[6] = measurements[2].position.x.ToString();
+                textToStore[7] = measurements[2].position.y.ToString();
+                textToStore[8] = measurements[2].position.z.ToString();
+                textToStore[9] = measurements[3].position.x.ToString();
+                textToStore[10] = (measurements[3].position.y - 0.06f).ToString();
+                textToStore[11] = measurements[3].position.z.ToString();
+                WriteToFile(textToStore, FILEPATHLastTPose);
+            }
+			catch (Exception e)
+			{
+				MelonLogger.Error(e);
+			}
 		}
 
         public override void OnLateInitializeMelon()
@@ -141,6 +157,10 @@ namespace LoaderSkipper
 
         public override void OnSceneWasLoaded(int buildIndex, string sceneName)
 		{
+			if (sceneName == "Loader")
+			{
+				loading = false;
+			}
 			currentScene = sceneName;
 			sceneChanged = true;
 		}

@@ -4,7 +4,7 @@ using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
 // ...
-[assembly: MelonInfo(typeof(main), "LoaderSkipper", "3.0.2", "UlvakSkillz")]
+[assembly: MelonInfo(typeof(main), "LoaderSkipper", "3.1.1", "UlvakSkillz")]
 [assembly: MelonGame("Buckethead Entertainment", "RUMBLE")]
 [assembly: MelonColor(255, 195, 0, 255)]
 [assembly: MelonAuthorColor(255, 195, 0, 255)]
