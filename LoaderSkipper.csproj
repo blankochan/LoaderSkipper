@@ -70,6 +70,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy "C:\Users\austi\source\repos\LoaderSkipper\LoaderSkipper\obj\Debug\LoaderSkipper.dll" "F:\SteamLibrary\steamapps\common\RUMBLE\Mods" /Y</PostBuildEvent>
+    <PostBuildEvent>xcopy $(TargetPath) "E:\SteamLibrary\steamapps\common\RUMBLE\Mods" /Y</PostBuildEvent>
   </PropertyGroup>
 </Project>

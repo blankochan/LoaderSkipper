@@ -35,7 +35,7 @@ namespace LoaderSkipper
                 {
                     if (currentScene == "Loader")
                     {
-                        status = GameObject.Find("________________SCENE_________________/Text/Measuring/TextCanvas/Status");
+                        status = GameObject.Find("SCENE/Loader T pose/TextCanvas/Status");
                         init = true;
                     }
 				}
