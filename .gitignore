@@ -1,0 +1,21 @@
+.ref/
+.ref
+[Dd]ebug/
+[Rr]elease/
+x64/
+[Bb]in/
+[Oo]bj/
+
+/packages/
+riderModule.iml
+/_ReSharper.Caches/
+
+# Editor specific
+.idea/
+.vs/
+
+# User-specific files
+*.suo
+*.user
+*.sln.docstates
+
